@@ -1,8 +1,7 @@
 const SEGMENTS = [
   { name: 'Abel',  color: '#b5451f' },
   { name: 'Abrsh', color: '#d9b26a' },
-  { name: 'Abel',  color: '#7a2a10' },
-  { name: 'Tem',   color: '#8a5a2b' },
+  { name: 'Tem',   color: '#7a2a10' },
 ];
 
 const WEIGHTS = { Abel: 2, Abrsh: 1, Tem: 1 };
