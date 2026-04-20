@@ -1,8 +1,8 @@
 const SEGMENTS = [
-  { name: 'Abel',  color: '#ff3d6e' },
-  { name: 'Abrsh', color: '#3ab0ff' },
-  { name: 'Abel',  color: '#ff7aa5' },
-  { name: 'Tem',   color: '#a06cd5' },
+  { name: 'Abel',  color: '#b5451f' },
+  { name: 'Abrsh', color: '#d9b26a' },
+  { name: 'Abel',  color: '#7a2a10' },
+  { name: 'Tem',   color: '#8a5a2b' },
 ];
 
 const WEIGHTS = { Abel: 2, Abrsh: 1, Tem: 1 };
@@ -10,7 +10,7 @@ const WEIGHTS = { Abel: 2, Abrsh: 1, Tem: 1 };
 const wheel = document.getElementById('wheel');
 const spinBtn = document.getElementById('spinBtn');
 const againBtn = document.getElementById('againBtn');
-const resultCard = document.getElementById('resultCard');
+const modal = document.getElementById('modal');
 const resultName = document.getElementById('resultName');
 const resultLine = document.getElementById('resultLine');
 
@@ -38,7 +38,7 @@ function buildWheel() {
   for (let i = 0; i < segCount; i++) {
     const start = i * segAngle - segAngle / 2;
     const end = start + segAngle;
-    svg += `<path d="${pieSlice(r, start, end)}" fill="${SEGMENTS[i].color}" stroke="#ffffff" stroke-width="2" stroke-linejoin="round" />`;
+    svg += `<path d="${pieSlice(r, start, end)}" fill="${SEGMENTS[i].color}" stroke="#4a2b14" stroke-width="2" stroke-linejoin="round" />`;
   }
 
   for (let i = 0; i < segCount; i++) {
@@ -48,17 +48,10 @@ function buildWheel() {
     const tilt = mid > 90 && mid < 270 ? mid + 180 : mid;
     svg += `<g transform="translate(${x.toFixed(3)} ${y.toFixed(3)}) rotate(${tilt})">
       <text text-anchor="middle" dominant-baseline="middle"
-        font-family="'Luckiest Guy', cursive" font-size="20"
-        fill="#ffffff" stroke="rgba(0,0,0,0.4)" stroke-width="0.7"
+        font-family="'Rye', 'Bungee', cursive" font-size="18"
+        fill="#fff3db" stroke="#4a2b14" stroke-width="0.8"
         paint-order="stroke">${SEGMENTS[i].name}</text>
     </g>`;
-  }
-
-  for (let i = 0; i < segCount; i++) {
-    const mid = i * segAngle;
-    const dotR = r * 0.92;
-    const { x, y } = polar(dotR, mid);
-    svg += `<circle cx="${x.toFixed(3)}" cy="${y.toFixed(3)}" r="3" fill="#ffffff" opacity="0.85" />`;
   }
 
   wheel.innerHTML = svg;
@@ -79,50 +72,40 @@ function pickSegmentIndex(name) {
   return matches[Math.floor(Math.random() * matches.length)];
 }
 
-function hideResult() {
-  resultCard.classList.remove('show');
-  resultCard.classList.add('hidden');
-}
-
-function showResult(name) {
+function openModal(name) {
   resultName.textContent = name;
   resultLine.textContent = `${name} gets bullied today`;
-  resultCard.classList.remove('hidden');
-  requestAnimationFrame(() => resultCard.classList.add('show'));
+  modal.classList.remove('hidden');
+}
+
+function closeModal() {
+  modal.classList.add('hidden');
 }
 
 function fireConfetti() {
   if (typeof confetti !== 'function') return;
-  const colors = ['#ff3d6e', '#ffd23f', '#3ab0ff', '#a06cd5', '#4cd3c2', '#ff7aa5'];
+  const colors = ['#b5451f', '#d9b26a', '#7a2a10', '#fff3db', '#8a5a2b', '#f1d79a'];
 
   confetti({
-    particleCount: 160,
+    particleCount: 140,
     spread: 100,
-    startVelocity: 50,
-    origin: { y: 0.55 },
+    startVelocity: 48,
+    origin: { y: 0.5 },
     colors,
-    scalar: 1.1,
+    scalar: 1.05,
   });
 
   setTimeout(() => {
-    confetti({ particleCount: 80, angle: 60, spread: 70, origin: { x: 0, y: 0.7 }, colors });
-    confetti({ particleCount: 80, angle: 120, spread: 70, origin: { x: 1, y: 0.7 }, colors });
-  }, 250);
-
-  const duration = 2200;
-  const end = Date.now() + duration;
-  (function frame() {
-    confetti({ particleCount: 3, angle: 60, spread: 75, origin: { x: 0, y: 0.8 }, colors });
-    confetti({ particleCount: 3, angle: 120, spread: 75, origin: { x: 1, y: 0.8 }, colors });
-    if (Date.now() < end) requestAnimationFrame(frame);
-  })();
+    confetti({ particleCount: 70, angle: 60, spread: 70, origin: { x: 0, y: 0.7 }, colors });
+    confetti({ particleCount: 70, angle: 120, spread: 70, origin: { x: 1, y: 0.7 }, colors });
+  }, 220);
 }
 
 function spin() {
   if (spinning) return;
   spinning = true;
   spinBtn.disabled = true;
-  hideResult();
+  closeModal();
 
   const winner = weightedPick();
   const segIndex = pickSegmentIndex(winner);
@@ -133,7 +116,7 @@ function spin() {
   const desiredEnd = ((-segCenter + jitter) % 360 + 360) % 360;
   const currentMod = ((currentRotation % 360) + 360) % 360;
   const extraSpins = 6 + Math.floor(Math.random() * 3);
-  let delta = (desiredEnd - currentMod + 360) % 360 + extraSpins * 360;
+  const delta = (desiredEnd - currentMod + 360) % 360 + extraSpins * 360;
 
   currentRotation += delta;
   wheel.classList.add('spinning');
@@ -142,15 +125,21 @@ function spin() {
   setTimeout(() => {
     spinning = false;
     spinBtn.disabled = false;
-    showResult(winner);
+    openModal(winner);
     fireConfetti();
   }, 5050);
 }
 
 spinBtn.addEventListener('click', spin);
 againBtn.addEventListener('click', () => {
-  hideResult();
+  closeModal();
   spin();
+});
+modal.addEventListener('click', (e) => {
+  if (e.target.dataset.close) closeModal();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
 });
 
 buildWheel();

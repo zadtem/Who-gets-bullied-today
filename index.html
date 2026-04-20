@@ -7,55 +7,37 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Luckiest+Guy&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Rye&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <div class="bg-blobs">
-    <span class="blob b1"></span>
-    <span class="blob b2"></span>
-    <span class="blob b3"></span>
-    <span class="blob b4"></span>
-  </div>
-
   <main class="app">
     <header class="hero">
-      <h1 class="title">Who Gets Bullied Today?</h1>
-      <p class="subtitle">Spin the wheel of fate. No mercy. No takebacks.</p>
+      <h1 class="title">Who Gets<br/>Bullied Today?</h1>
+      <p class="subtitle">Spin the wheel, partner</p>
     </header>
 
     <section class="wheel-stage">
-      <div class="pointer" aria-hidden="true">
-        <svg viewBox="0 0 40 50" width="56" height="70">
-          <path d="M20 50 L0 0 L40 0 Z" fill="#ff3d6e" stroke="#fff" stroke-width="3" stroke-linejoin="round"/>
-          <circle cx="20" cy="8" r="4" fill="#fff"/>
-        </svg>
-      </div>
-
+      <div class="pointer" aria-hidden="true"></div>
       <div class="wheel-wrap">
         <svg id="wheel" class="wheel" viewBox="-110 -110 220 220" aria-label="Bullying wheel"></svg>
-        <div class="hub">
-          <span></span>
-        </div>
-      </div>
-
-      <button id="spinBtn" class="spin-btn" type="button">
-        <span>SPIN!</span>
-      </button>
-    </section>
-
-    <section id="resultCard" class="result-card hidden" aria-live="polite">
-      <div class="result-inner">
-        <p class="result-label">Today's victim is</p>
-        <h2 id="resultName" class="result-name">—</h2>
-        <p id="resultLine" class="result-line">gets bullied today</p>
-        <button id="againBtn" class="again-btn" type="button">Spin again</button>
+        <div class="hub"></div>
       </div>
     </section>
 
-    <footer class="foot">
-      <span>Made with love &amp; light bullying</span>
-    </footer>
+    <button id="spinBtn" class="spin-btn" type="button">SPIN</button>
   </main>
+
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="resultName">
+    <div class="modal-backdrop" data-close="1"></div>
+    <div class="modal-card">
+      <button class="close-btn" type="button" data-close="1" aria-label="Close">&times;</button>
+      <p class="wanted-label">WANTED</p>
+      <div class="star">&#9733;</div>
+      <h2 id="resultName" class="result-name">—</h2>
+      <p id="resultLine" class="result-line">gets bullied today</p>
+      <button id="againBtn" class="again-btn" type="button">Spin again</button>
+    </div>
+  </div>
 
   <canvas id="confettiCanvas" class="confetti-canvas" aria-hidden="true"></canvas>
 
